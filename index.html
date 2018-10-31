@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <title>Be a psychic!</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script><!-- Added a link to Bootstrap-->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        rel="stylesheet">
+</head>
+<body>
+  <h1>The Psychic Game!</h1>
+  <p>Guess what letter i'm thinking of!</p>
+  <div class="winsBox"></div>
+  <div class="lossesBox"></div>
+  <div class="guessesBox"></div>
+  <div class="alreadyGuessedBox"></div><br>
+  <br>
+  <input class="btn btn-primary"
+        type="button"
+        value="Reset Game"> 
+  <script type="text/javascript">
+
+
+    var ENGLISH = genCharArray("a","z");
+    var winCount = 0;
+    var lossCount = 0;
+    var guessCount = 10;
+    var alreadyGuessed = [];
+    var userGuess = "";
+    var computerGuess = "";
+
+    function genCharArray(charA, charZ) {
+      var a = [], i = charA.charCodeAt(0), j = charZ.charCodeAt(0);
+      for (; i <= j; ++i) {
+          a.push(String.fromCharCode(i));
+      }
+      return a;
+    }
+
+    function updateScreen() {
+      $(".winsBox").html("Wins: "+winCount);
+      $(".lossesBox").html("Losses: "+lossCount);
+      $(".guessesBox").html("Guesses left: "+guessCount);
+      $(".alreadyGuessedBox").html("Your guesses so far: "+alreadyGuessed);
+    }
+
+    updateScreen();
+
+    computerGuess = ENGLISH[Math.floor(Math.random()*ENGLISH.length)];
+
+    console.log(computerGuess);
+    document.onkeydown = function(event) {
+      userGuess = event.key;
+
+      if (guessCount > 0) {
+        if (userGuess == computerGuess){
+          alert("you win!");
+          winCount++;
+          $(".winsBox").html("Wins: "+winCount);
+          computerGuess = ENGLISH[Math.floor(Math.random()*ENGLISH.length)];
+          alreadyGuessed = [];
+          guessCount = 10;
+
+        }
+        else {
+          guessCount--;
+          alreadyGuessed.push(userGuess);
+          updateScreen();
+        }
+      }
+      else {
+          alert("you ran out of tries, you lose!");
+          lossCount++;
+          computerGuess = ENGLISH[Math.floor(Math.random()*ENGLISH.length)];
+          alreadyGuessed = [];
+          guessCount = 10;
+
+          $(".lossesBox").html("Losses: "+lossCount);
+        }
+    };
+
+    $(".btn").on("click", function() {
+
+      guessCount = 10;
+      winCount = 0;
+      alreadyGuessed = [];
+      userGuess = '';
+      computerGuess = ENGLISH[Math.floor(Math.random()*ENGLISH.length)];
+
+      $(".winsBox").html("Wins: 0");
+      $(".lossesBox").html("Losses: 0");
+      $(".guessesBox").html("Guesses left: "+guessCount);
+      $(".alreadyGuessedBox").html("Your guesses so far: ");
+    });
+
+  </script>
+</body>
+</html>
